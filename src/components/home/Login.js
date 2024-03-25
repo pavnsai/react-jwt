@@ -9,14 +9,14 @@ function Login({ show, handleClose, handleSignupShow }) {
   const Auth = useAuth();
   const isLoggedIn = Auth.userIsAuthenticated();
   const navigate = useNavigate();
-  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState(''); // Changed from username to email
   const [password, setPassword] = useState('');
   const [isError, setIsError] = useState(false);
-
+console.log("inside"+show);
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    if (name === 'username') {
-      setUsername(value);
+    if (name === 'email') { // Changed from username to email
+      setEmail(value);
     } else if (name === 'password') {
       setPassword(value);
     }
@@ -25,22 +25,23 @@ function Login({ show, handleClose, handleSignupShow }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!(username && password)) {
+    if (!(email && password)) { // Changed from username to email
       setIsError(true);
       return;
     }
 
     try {
-      const response = await orderApi.authenticate(username, password);
+      const response = await orderApi.authenticate(email, password); // Changed from username to email
       const { accessToken } = response.data;
       const data = parseJwt(accessToken);
       const authenticatedUser = { data, accessToken };
 
       Auth.userLogin(authenticatedUser);
 
-      setUsername('');
+      setEmail(''); // Changed from username to email
       setPassword('');
       setIsError(false);
+      navigate('/');
       handleClose(); // Close the modal on successful login
     } catch (error) {
       handleLogError(error);
@@ -53,16 +54,15 @@ function Login({ show, handleClose, handleSignupShow }) {
   }
 
   return (
-      // <Modal show={show} onHide={handleClose} centered>
-        <Modal show={show} onHide={()=>{navigate('/') }} centered>
+      <Modal show={show} onHide={()=>{navigate('/') }} centered>
         <Modal.Header closeButton>
           <Modal.Title>Login</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <Form onSubmit={handleSubmit}>
             <Form.Group className="mb-3">
-              <Form.Label>Username</Form.Label>
-              <Form.Control type="text" name="username" value={username} onChange={handleInputChange} />
+              <Form.Label>Email</Form.Label> {/* Changed from Username to Email */}
+              <Form.Control type="email" name="email" value={email} onChange={handleInputChange} /> {/* Changed from Username to Email */}
             </Form.Group>
             <Form.Group className="mb-3">
               <Form.Label>Password</Form.Label>
@@ -70,7 +70,7 @@ function Login({ show, handleClose, handleSignupShow }) {
             </Form.Group>
             <Button variant="primary" type="submit" className="btn-block">Login</Button>
           </Form>
-          {isError && <Alert variant="danger" className="mt-3">The username or password provided is incorrect!</Alert>}
+          {isError && <Alert variant="danger" className="mt-3">The email or password provided is incorrect!</Alert>}
           <div className="mt-3 text-center">Don't have an account? <NavLink to="/signup" onClick={handleSignupShow}>Sign Up</NavLink></div>
         </Modal.Body>
       </Modal>

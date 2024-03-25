@@ -17,6 +17,7 @@ function App() {
     // const history = useNavigate();
 
     const handleLoginShow = () => {
+        console.log("coming to main")
         setShowLoginModal(true);
     };
 
@@ -27,6 +28,7 @@ function App() {
     };
 
     const handleSignupShow = () => {
+        console.log("coming to second main")
         setShowSignupModal(true);
     };
 
@@ -42,7 +44,7 @@ function App() {
                 <Routes>
                     <Route path='/' element={<Home />} />
                     <Route path='/login' element={<Login show={showLoginModal} handleClose={handleLoginClose} handleSignupShow ={handleSignupShow} />} />
-                    <Route path='/signup' element={<Signup show={showSignupModal} handleClose={handleSignupClose} handleSigninShow={handleLoginShow} />} />
+                    <Route path='/signup' element={<Signup show={showSignupModal} handleClose={handleSignupClose} handleLoginShow={handleLoginShow} />} />
                     <Route path="/adminpage" element={<PrivateRoute><AdminPage /></PrivateRoute>} />
                     <Route path="/userpage" element={<PrivateRoute><UserPage /></PrivateRoute>} />
                     <Route path="*" element={<Navigate to="/" />} />

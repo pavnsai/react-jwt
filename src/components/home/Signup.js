@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import {NavLink, Navigate, useNavigate} from 'react-router-dom';
+import { NavLink, Navigate, useNavigate } from 'react-router-dom';
 import { Modal, Button, Form, Alert } from 'react-bootstrap';
 import { useAuth } from '../context/AuthContext';
 import { orderApi } from '../misc/OrderApi';
@@ -9,21 +9,24 @@ function Signup({ show, handleClose, handleLoginShow }) {
   const Auth = useAuth();
   const isLoggedIn = Auth.userIsAuthenticated();
   const navigate = useNavigate();
-  const [username, setUsername] = useState('');
+  const [firstname, setFirstname] = useState('');
+  const [lastname, setLastname] = useState('');
   const [password, setPassword] = useState('');
-  const [name, setName] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
   const [email, setEmail] = useState('');
   const [isError, setIsError] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
-
+  console.log("second inside"+show);
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    if (name === 'username') {
-      setUsername(value);
+    if (name === 'firstname') {
+      setFirstname(value);
+    } else if (name === 'lastname') {
+      setLastname(value);
     } else if (name === 'password') {
       setPassword(value);
-    } else if (name === 'name') {
-      setName(value);
+    } else if (name === 'confirmPassword') {
+      setConfirmPassword(value);
     } else if (name === 'email') {
       setEmail(value);
     }
@@ -32,13 +35,19 @@ function Signup({ show, handleClose, handleLoginShow }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!(username && password && name && email)) {
+    if (!(firstname && lastname && password && confirmPassword && email)) {
       setIsError(true);
-      setErrorMessage('Please, inform all fields!');
+      setErrorMessage('Please, fill in all fields!');
       return;
     }
 
-    const user = { username, password, name, email };
+    if (password !== confirmPassword) {
+      setIsError(true);
+      setErrorMessage('Passwords do not match!');
+      return;
+    }
+
+    const user = { firstname, lastname, password, email };
 
     try {
       const response = await orderApi.signup(user);
@@ -48,9 +57,10 @@ function Signup({ show, handleClose, handleLoginShow }) {
 
       Auth.userLogin(authenticatedUser);
 
-      setUsername('');
+      setFirstname('');
+      setLastname('');
       setPassword('');
-      setName('');
+      setConfirmPassword('');
       setEmail('');
       setIsError(false);
       setErrorMessage('');
@@ -77,23 +87,26 @@ function Signup({ show, handleClose, handleLoginShow }) {
 
   return (
       <Modal show={show} onHide={()=>{navigate('/') }} centered>
-      {/*<Modal show={show} onHide={handleClose} centered>*/}
         <Modal.Header closeButton>
           <Modal.Title>Signup</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <Form onSubmit={handleSubmit}>
             <Form.Group className="mb-3">
-              <Form.Label>Username</Form.Label>
-              <Form.Control type="text" name="username" value={username} onChange={handleInputChange} />
+              <Form.Label>First Name</Form.Label>
+              <Form.Control type="text" name="firstname" value={firstname} onChange={handleInputChange} />
+            </Form.Group>
+            <Form.Group className="mb-3">
+              <Form.Label>Last Name</Form.Label>
+              <Form.Control type="text" name="lastname" value={lastname} onChange={handleInputChange} />
             </Form.Group>
             <Form.Group className="mb-3">
               <Form.Label>Password</Form.Label>
               <Form.Control type="password" name="password" value={password} onChange={handleInputChange} />
             </Form.Group>
             <Form.Group className="mb-3">
-              <Form.Label>Name</Form.Label>
-              <Form.Control type="text" name="name" value={name} onChange={handleInputChange} />
+              <Form.Label>Confirm Password</Form.Label>
+              <Form.Control type="password" name="confirmPassword" value={confirmPassword} onChange={handleInputChange} />
             </Form.Group>
             <Form.Group className="mb-3">
               <Form.Label>Email</Form.Label>

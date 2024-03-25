@@ -36,7 +36,7 @@ function Navbar({ handleLoginShow, handleSignupShow }) {
   return (
       <BootstrapNavbar bg="dark" variant="dark" expand="lg">
         <Container>
-          <BootstrapNavbar.Brand as={Link} to="/">Order-UI</BootstrapNavbar.Brand>
+          <BootstrapNavbar.Brand as={Link} to="/">Career-Compass</BootstrapNavbar.Brand>
           <BootstrapNavbar.Toggle aria-controls="basic-navbar-nav" />
           <BootstrapNavbar.Collapse id="basic-navbar-nav">
             <Nav className="me-auto">
